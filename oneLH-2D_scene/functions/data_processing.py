@@ -100,13 +100,6 @@ def reorganize_data(xy_data, timestamp):
     return data
 
 
-
-
-
-
-
-
-
 def interpolate_camera_to_lh2(camera_data, lh2_data):
     """
     Interpolate the camera data to the lh2 timebase,
@@ -135,7 +128,7 @@ def interpolate_camera_to_lh2(camera_data, lh2_data):
 
     """
 
-    # Offset the camera timestamp to get rid of the communication delay.
+    # Offset the camera timestamp to calibrate for the communication delay.
     camera_data['time'] += 318109e-6 # seconds
 
     # Interpolate the camera data against the lh2
@@ -148,3 +141,68 @@ def interpolate_camera_to_lh2(camera_data, lh2_data):
                     'y':    interpolated_y,}
     
     return interp_data
+
+
+def find_closest_point(data, t):
+    """
+    returns the [x,y] pair closest to a particular t.
+    Useful to compare if two datasets are time-aligned.
+
+    Parameters
+    ----------
+    data : Dict
+        Dictionary of numpy arrays with the interpolated LH2 data.
+        values:
+            'x': array, float (N,)
+                Interpolated data X axis
+            'y': array, float (N,)
+                Interpolated data Y axis
+            'time': array, int (N,)
+                interpolated data t in unix epoch (microseconds)
+    t :
+        time of the point to find
+
+
+    Returns
+    -------
+    point : array, float (2,)
+        point in  data closest in time to t
+
+    """
+
+    idx = np.abs(data['time'] - t).argmin()
+    point = [data['x'][idx], data['y'][idx]]
+    return point
+
+
+def get_start_end_index(data, t_start, t_stop):
+    """
+    Return the index closest to a particular timestamps to use in ploting
+
+    Parameters
+    ----------
+    data : Dict
+        Dictionary of numpy arrays with the interpolated LH2 data.
+        values:
+            'x': array, float (N,)
+                Interpolated data X axis
+            'y': array, float (N,)
+                Interpolated data Y axis
+            'time': array, int (N,)
+                interpolated data t in unix epoch (microseconds)
+    t_start : float
+        Start timestamp for the plot
+    t_stop : float
+        Start timestamp for the plot
+
+
+    Returns
+    -------
+    point : array, float (2,)
+        point in  data closest in time to t
+
+    """
+
+    idx = np.abs(data['time'] - t).argmin()
+    point = [data['x'][idx], data['y'][idx]]
+    return point
