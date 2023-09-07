@@ -75,80 +75,8 @@ def LH2_count_to_pixels(count_1, count_2, mode):
     # Return the projected points
     return pts_lighthouse
 
-def solve_2d_scene_get_Rtn(pts_a, pts_b):
-    """
-    Use SVD to recover R,t,star from LHA to LHB, as well the 'n' of the plane.
-    """
-    # Obtain translation and rotation vectors
-    """
-    Use the projected LH2-camera points to triangulate the position of the LH2  basestations and of the LH2 receiver
-    """
-    # Obtain translation and rotation vectors
-    H, mask = cv2.findHomography(pts_a, pts_b, cv2.FM_LMEDS)
-
-    # Now do the math stuff from the Paper, with the SVD and stuff,
-    U, S, Vt = np.linalg.svd(H)
-    # Scale the singular values
-    S *= 1 / S[1] 
-
-    # Compute scaling factor between LH camera to the Robot plane
-    zeta = S[0]/S[2]
-
-    # Calculate n_star
-    a = np.sqrt( (1 - S[2]**2) / (S[0]**2 - S[2]**2) )
-    b = np.sqrt( (S[0]**2 - 1) / (S[0]**2 - S[2]**2) )
-    n_star = b*Vt[0] - a*Vt[2]
-    # Use asumption about the LH pointing towards the robot plane from above to resolve the ambiguity in the calculation.
-    if n_star[1] < 0: 
-        n_star = b*Vt[0] + a*Vt[2]
-
-    # Calculate R_star
-    c = 1 + S[0]*S[2]
-    d = a*b
-    # scale c and d
-    cd_scale = 1 / np.sqrt(c**2 + d**2)
-    c *= cd_scale
-    d *= cd_scale
-    R_star = U @ np.array([[c, 0, d], [0, 1, 0], [-d, 0, c]]) @ Vt
-
-    # Calculate t_star
-    e = -b / S[0]
-    f = -a / S[2]
-    # scale e and f
-    ef_scale = 1 / np.sqrt(e**2 + f**2)
-    e *= ef_scale
-    f *= ef_scale
-    # Then, t_Star becomes
-    t_star = e * Vt[0] + f * Vt[2]
-
-    # Check that both LH are looking at each other.
-    # If not, recalculate R,t with the other option
-    if t_star[2] < 0:
-        # Calculate R_star
-        c = 1 + S[0]*S[2]
-        d = a*b
-        # scale c and d
-        cd_scale = 1 / np.sqrt(c**2 + d**2)
-        c *= cd_scale
-        d *= cd_scale
-        R_star = U @ np.array([[c, 0, -d], [0, 1, 0], [d, 0, c]]) @ Vt
-
-        # Calculate t_star
-        e = -b / S[0]
-        f = -a / S[2]
-        # scale e and f
-        ef_scale = 1 / np.sqrt(e**2 + f**2)
-        e *= ef_scale
-        f *= ef_scale
-        # Then, t_Star becomes
-        t_star = e * Vt[0] - f * Vt[2]
-
-    # Make t_Star a column vector, because the rest of the code wxpectes it to be so.
-    t_star = t_star.reshape((3,1))
-
-    return t_star, R_star, n_star, zeta
  
-def fil_solve_2d(pts_a, pts_b):
+def solve_2d_scene_get_Rtn(pts_a, pts_b):
 
     # gg=cv2.findHomography(pts_a,pts_b, method = cv2.RANSAC, ransacReprojThreshold = 3)
     gg=cv2.findHomography(pts_a, pts_b, cv2.FM_LMEDS)
