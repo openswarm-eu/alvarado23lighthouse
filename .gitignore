@@ -1,6 +1,9 @@
 # vscode
 .vscode/
 
+# Pdf outputs
+*.pdf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
