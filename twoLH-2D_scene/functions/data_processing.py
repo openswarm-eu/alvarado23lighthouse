@@ -75,7 +75,6 @@ def LH2_count_to_pixels(count_1, count_2, mode):
     # Return the projected points
     return pts_lighthouse
 
- 
 def solve_2d_scene_get_Rtn(pts_a, pts_b):
 
     # gg=cv2.findHomography(pts_a,pts_b, method = cv2.RANSAC, ransacReprojThreshold = 3)
@@ -140,15 +139,6 @@ def solve_2d_scene_get_Rtn(pts_a, pts_b):
     
 
     return solution_1, solution_2, zeta
-
-def compute_rando_rodriguez(n_star):
-
-    rando_rodriguez = np.array([
-    [-n_star[1]/np.sqrt(n_star[0]*n_star[0] + n_star[1]*n_star[1]), n_star[0]/np.sqrt(n_star[0]*n_star[0] + n_star[1]*n_star[1]), 0],
-    [n_star[0]*n_star[2]/np.sqrt(n_star[0]*n_star[0] + n_star[1]*n_star[1]),n_star[1]*n_star[2]/np.sqrt(n_star[0]*n_star[0] + n_star[1]*n_star[1]),-np.sqrt(n_star[0]*n_star[0] + n_star[1]*n_star[1])],
-    [-n_star[0],-n_star[1],-n_star[2]]]);
-
-    return rando_rodriguez
 
 def solve_point_plane(n_star, zeta, pts):
     
@@ -275,7 +265,7 @@ def interpolate_cam_data(lh_data, exp_data):
 
 def correct_perspective(calib_data, exp_data):
     """
-    THE SVD TECHNIQUE  FAILED, SO I HARDCODED T,R THAT I COMPUTED ELSEWHERE
+    THE SVD TECHNIQUE  FAILED, SO I HARDCODED T,R THAT I COMPUTED WITH MONTECARLO
     Create a rotation and translation vector to move the reconstructed grid onto the origin for better comparison.
     Using an SVD, according to: https://nghiaho.com/?page_id=671
     """
@@ -314,7 +304,8 @@ def correct_perspective(calib_data, exp_data):
     # Get the ideal translation
     t = B_centroid - R @ A_centroid
 
-    # Try tranformation you found elsewhere
+    # The Kabsch algorithm failed to find the correct transformation for a particular scenario.
+    # So we found the correct  transformation by Monte Carlo and override the results with the following matrices
     R1 = np.array(  [[ 0.98919328, -0.12556392,  0.07569918,],
                     [ 0.1027148 ,  0.22505302, -0.96891734,],
                     [ 0.10462473,  0.96622194,  0.23551821,]])
