@@ -16,8 +16,4 @@ The paper presents 3 different algorithms for 3 different scenarios. The relevan
 - Two lighthouse, 2D scene: `twoLH-2D_scene`
 - Two lighthouse, 3D scene: `twoLH-3D_scene`
 
-### Run the tests
-From the repository's root folder run the command.
-
-- `$ pytest tests`
 
