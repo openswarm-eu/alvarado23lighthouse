@@ -4,9 +4,9 @@ This repository holds the code and dataset used to replicate the plots from the 
 ## Lighthouse v2 Decoding Software
 
 An open-source implementation of the decoding algorithm presented in the paper can be found at the following links. The firmware was written for the nRF52 and nRF53 families of Nordic Semiconductor microcontrollers; it was tested on the nRF52840, nRF52833, and nRF5340 microcontrollers.
-- [Header file](https://github.com/DotBots/DotBot-firmware/blob/main/bsp/lh2.h)
-- [Implementation](https://github.com/DotBots/DotBot-firmware/blob/main/bsp/nrf/lh2.c)
-- [Usage example](https://github.com/DotBots/DotBot-firmware/blob/main/projects/01bsp_lighthouse/01bsp_lighthouse.c)
+- [Header file](https://github.com/DotBots/DotBot-firmware/blob/f3a46c34e9ee9bda8e34b37e943eea6c8cd8e2da/bsp/lh2.h)
+- [Implementation](https://github.com/DotBots/DotBot-firmware/blob/f3a46c34e9ee9bda8e34b37e943eea6c8cd8e2da/bsp/nrf/lh2.c)
+- [Usage example](https://github.com/DotBots/DotBot-firmware/blob/f3a46c34e9ee9bda8e34b37e943eea6c8cd8e2da/projects/01bsp_lighthouse/01bsp_lighthouse.c)
 
 ## Getting Started
 
